@@ -26,6 +26,10 @@
                     case "2":
                         ViewAllProducts(inventory);
                         break;
+                    case "3":
+                        EditProduct(inventory);
+                        break;
+                    
                     case "6":
                         running = false;
                         break;
@@ -46,8 +50,8 @@
             int quantity = Convert.ToInt32(Console.ReadLine());
 
             Product product = new Product(name, price, quantity);
-            inventory.AddProduct(product);
-            Console.WriteLine("Product added successfully.");
+            Product addedProduct = inventory.AddProduct(product);
+            Console.WriteLine($"Product added successfully with ID: {addedProduct.Id}");
         }
 
         static void ViewAllProducts(Inventory inventory)
@@ -61,5 +65,38 @@
             }
             products.ForEach(product => Console.WriteLine(product));
         }
+            
+        static void EditProduct(Inventory inventory)
+        {
+            Console.Write("Enter product ID: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+            
+            Product? product = inventory.GetProductById(id);
+            if (product is null)
+            {
+                Console.WriteLine("Product not found.");
+                return;
+            }
+            
+            Console.WriteLine("Your product is: " + product);
+            
+            Console.Write("Enter new product name (or press Enter to keep the current name): ");
+            string name = Console.ReadLine();
+            product.Name = String.IsNullOrEmpty(name) ? product.Name : name; 
+            
+            Console.Write("Enter new product price (or press Enter to keep the current price): ");
+            string price = Console.ReadLine();
+            product.Price = String.IsNullOrEmpty(price) ? product.Price : Convert.ToDecimal(price);
+            
+            Console.Write("Enter new product quantity (or press Enter to keep the current quantity): ");
+            string quantity = Console.ReadLine();
+            product.Quantity = String.IsNullOrEmpty(quantity) ? product.Quantity : Convert.ToInt32(quantity);
+
+            Console.WriteLine(inventory.UpdateProduct(product)
+                ? "Product updated successfully."
+                : "An error occurred while updating the product. Please try again.");
+        }
+        
+  
     }
 }
