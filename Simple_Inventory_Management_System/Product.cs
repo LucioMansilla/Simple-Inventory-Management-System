@@ -50,4 +50,23 @@ public class Product
     {
         return $"ID: {Id}, Name: {Name}, Price: {Price:C}, Quantity: {Quantity}";
     }
+    
+    public override bool Equals(object? obj)
+    {
+        if(obj is null)
+            return false;
+        if(ReferenceEquals(this, obj))
+            return true;
+        if (obj is not Product product)
+            return false;
+        return Id == product.Id && Name == product.Name && Price == product.Price && Quantity == product.Quantity;
+    }
+    
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Name, Price, Quantity);
+    }
+    
+    
+    
 }
