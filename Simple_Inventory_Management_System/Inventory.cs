@@ -32,6 +32,15 @@ public class Inventory
         return true;
     }
     
+    
+    public bool DeleteProduct(int id)
+    {
+        var product = _products.FirstOrDefault(p => p.Id == id);
+        if (product == null) return false;
+        _products.Remove(product);
+        return true;
+    }
+    
  
 
 }
