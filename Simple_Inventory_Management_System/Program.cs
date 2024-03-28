@@ -23,6 +23,9 @@
                     case "1":
                         AddProduct(inventory);
                         break;
+                    case "2":
+                        ViewAllProducts(inventory);
+                        break;
                     case "6":
                         running = false;
                         break;
@@ -47,5 +50,16 @@
             Console.WriteLine("Product added successfully.");
         }
 
+        static void ViewAllProducts(Inventory inventory)
+        {
+            var products = inventory.GetProducts();
+
+            if (!products.Any())
+            {
+                Console.WriteLine("No products found.");
+                return;
+            }
+            products.ForEach(product => Console.WriteLine(product));
+        }
     }
 }

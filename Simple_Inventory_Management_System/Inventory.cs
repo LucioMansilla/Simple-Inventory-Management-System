@@ -2,7 +2,7 @@ namespace Simple_Inventory_Management_System;
 
 public class Inventory
 {
-    private List<Product> _products;
+    private List<Product> _products; 
     private int _nextProductId;
 
     public Inventory()
@@ -16,6 +16,6 @@ public class Inventory
         product.Id = _nextProductId++; 
         _products.Add(product);
     }
-
-   
+    
+    public List<Product> GetProducts() => _products;
 }
