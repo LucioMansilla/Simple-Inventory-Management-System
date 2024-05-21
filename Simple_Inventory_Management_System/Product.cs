@@ -1,12 +1,25 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace Simple_Inventory_Management_System;
 
 public class Product
 {
+    private string _name;
     private decimal _price;
     private int _quantity;
-    private string _name;
+
+    public Product(string name, decimal price, int quantity)
+    {
+        Name = name;
+        Price = price;
+        Quantity = quantity;
+    }
+
+    [BsonId]
+    [BsonRepresentation(BsonType.Int32)]
     public int Id { get; set; }
-    
+
     public string Name
     {
         get => _name;
@@ -17,6 +30,7 @@ public class Product
             _name = value;
         }
     }
+
     public decimal Price
     {
         get => _price;
@@ -39,34 +53,24 @@ public class Product
         }
     }
 
-    public Product(string name, decimal price, int quantity)
-    {
-        Name = name;
-        Price = price;
-        Quantity = quantity;
-    }
-
     public override string ToString()
     {
         return $"ID: {Id}, Name: {Name}, Price: {Price:C}, Quantity: {Quantity}";
     }
-    
+
     public override bool Equals(object? obj)
     {
-        if(obj is null)
+        if (obj is null)
             return false;
-        if(ReferenceEquals(this, obj))
+        if (ReferenceEquals(this, obj))
             return true;
         if (obj is not Product product)
             return false;
         return Id == product.Id && Name == product.Name && Price == product.Price && Quantity == product.Quantity;
     }
-    
+
     public override int GetHashCode()
     {
         return HashCode.Combine(Id, Name, Price, Quantity);
     }
-    
-    
-    
 }
