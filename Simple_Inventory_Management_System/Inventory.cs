@@ -1,53 +1,56 @@
+using Simple_Inventory_Management_System.DataBase;
+
 namespace Simple_Inventory_Management_System;
 
 public class Inventory
 {
-    private List<Product> _products;
-    private int _nextProductId;
+    private readonly DatabaseContext _ctx;
 
-    public Inventory()
+    public Inventory(DatabaseContext ctx)
     {
-        _products = new List<Product>();
-        _nextProductId = 1;
+        _ctx = ctx;
     }
 
     public Product AddProduct(Product product)
     {
-        if (_products.Any(p => p.Name == product.Name))
+        if (_ctx.GetProductByName(product.Name) != null)
             throw new Exception("Product with the same name already exists");
 
-        product.Id = _nextProductId++;
-        _products.Add(product);
-        return product;
+        var addedProduct = _ctx.AddProduct(product);
+        return addedProduct;
     }
 
-    public List<Product> GetProducts() => _products;
+    public List<Product> GetProducts()
+    {
+        return _ctx.GetProducts();
+    }
 
-    public Product? GetProductByName(string name) => _products.FirstOrDefault(p => p.Name == name);
+    public Product GetProductByName(string name)
+    {
+        return _ctx.GetProductByName(name);
+    }
 
     public bool UpdateProduct(Product updatedProduct)
     {
-        var product = _products.FirstOrDefault(p => p.Id == updatedProduct.Id);
+        var product = _ctx.GetProductById(updatedProduct.Id);
         if (product == null) return false;
 
-        if (_products.Any(p =>
+        if (_ctx.GetProducts().Any(p =>
                 p.Id != updatedProduct.Id && p.Name.Equals(updatedProduct.Name, StringComparison.OrdinalIgnoreCase)))
             return false;
 
-        product.Name = updatedProduct.Name;
-        product.Price = updatedProduct.Price;
-        product.Quantity = updatedProduct.Quantity;
-
-        return true;
+        return _ctx.UpdateProduct(updatedProduct);
     }
 
     public bool DeleteProduct(string name)
     {
-        var product = _products.FirstOrDefault(p => p.Name == name);
+        var product = _ctx.GetProductByName(name);
         if (product == null) return false;
-        _products.Remove(product);
-        return true;
+        return _ctx.DeleteProduct(name);
     }
 
-    public Product? SearchProduct(string name) => _products.FirstOrDefault(p => p.Name == name);
+    public Product? SearchProduct(string name)
+    {
+        return _ctx.GetProductByName(name);
+    }
 }
